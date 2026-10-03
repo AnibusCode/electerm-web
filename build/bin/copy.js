@@ -2,7 +2,7 @@ import { resolve } from 'path'
 import pkg from 'shelljs'
 import { cwd } from './build-common.js'
 
-const { cp } = pkg
+const { cp, mkdir } = pkg
 
 const f1 = resolve(
   cwd,
@@ -53,4 +53,16 @@ for (const obj of arr) {
   } else {
     cp('-r', from, to)
   }
+}
+
+// branding overlay: files from /branding override defaults
+import { existsSync } from 'fs'
+const brandImgs = resolve(cwd, 'branding/images')
+if (existsSync(brandImgs)) {
+  mkdir('-p', resolve(cwd, 'dist/assets/images'))
+  cp('-r', brandImgs + '/*', resolve(cwd, 'dist/assets/images/'))
+}
+const brandFav = resolve(cwd, 'branding/favicon.ico')
+if (existsSync(brandFav)) {
+  cp(brandFav, resolve(cwd, 'dist/assets/'))
 }
